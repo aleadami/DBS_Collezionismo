@@ -1,0 +1,13 @@
+# Ignora la cartella dei risultati di Maven
+target/
+
+#Ignora i log di errore
+*.log
+
+#Ignora file temporanei del sistema operativo
+.DS_Store
+**/.DS_Store
+
+#Ignora le configurazioni locali dell'IDE
+.idea/
+.vscode/
