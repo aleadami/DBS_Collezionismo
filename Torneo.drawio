@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36">
   <diagram name="Pagina-1" id="-5wEngpSd5qdmQy51tHo">
-    <mxGraphModel dx="1468" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2295" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -87,6 +87,27 @@
         </mxCell>
         <mxCell id="9Uvu0DezRD76qz6vFa_x-28" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Disputa" vertex="1">
           <mxGeometry height="80" width="80" x="180" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="MxfdVvkMj1AmxQWCcsHx-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Mazzo" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MxfdVvkMj1AmxQWCcsHx-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Carta" vertex="1">
+          <mxGeometry height="60" width="120" x="180" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MxfdVvkMj1AmxQWCcsHx-3" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Collezione" vertex="1">
+          <mxGeometry height="80" width="80" x="200" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="MxfdVvkMj1AmxQWCcsHx-5" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Creazione" vertex="1">
+          <mxGeometry height="80" width="80" x="480" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="MxfdVvkMj1AmxQWCcsHx-6" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Madeof" vertex="1">
+          <mxGeometry height="80" width="80" x="340" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MxfdVvkMj1AmxQWCcsHx-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Espansione" vertex="1">
+          <mxGeometry height="60" width="120" x="-100" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="MxfdVvkMj1AmxQWCcsHx-8" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Pubblicazione" vertex="1">
+          <mxGeometry height="80" width="80" x="60" y="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
