@@ -1,60 +1,54 @@
 CREATE TABLE Utente (
     Codice VARCHAR(20) PRIMARY KEY,
-
-);
-
---rappresenta l'oggetto base
-CREATE TABLE Oggetto (
-    Codice VARCHAR(8),
 );
 
 --Serve dividere un oggetto in oggetto fisico e virtuale
 CREATE TABLE CopiaPosseduta (
-
+    VARCHAR() PRIMARY KEY,
 );
 
---per classificare gli oggetti
-CREATE TABLE Categoria (
-    Codice VARCHAR(8),
+--rappresenta l'oggetto base
+CREATE TABLE OggettoCollezione (
+    Codice VARCHAR(8) PRIMARY KEY,
 );
 
 --ogni oggetti appartiene ad una collezione
-CREATE TABLE Collezioni (
-    Codice VARCHAR(8),
-);
-
-CREATE TABLE Rarita (
-    Codice VARCHAR(8),
-);
-
-CREATE TABLE Valutazioni (
-    Codice VARCHAR(8),
+CREATE TABLE Collezione (
+    Codice VARCHAR(8) PRIMARY KEY,
 );
 
 --sistema di scambio tra utenti
 CREATE TABLE Scambio (
-    Codice VARCHAR(8),
+    Codice VARCHAR(8) PRIMARY KEY,
 );
 
 --oggetti che vengono scambiati (va messo un attributo: scambiabile?)
-CREATE TABLE OggettoScambio (
-    Codice VARCHAR(8),
+CREATE TABLE ScambioItem (
+    Codice VARCHAR(8) PRIMARY KEY,
 );
 
 --oggetto desiderato dall'utente
 CREATE TABLE WishList (
-    Codice VARCHAR(8),
+    Codice VARCHAR(8) PRIMARY KEY,
 );
 
 --oggetti desiderati sono diversi dalla copia posseduta perchè è qualcosa di virtuale
 CREATE TABLE WishListItem (
-    Codice VARCHAR(8),
+    Codice VARCHAR(8) PRIMARY KEY,
 );
 
+--emilinabile?
 --reputazione e feedback
-CREATE TABLE RecensioneUtente (
-    Codice VARCHAR(8),
+CREATE TABLE Recensione (
+    Codice VARCHAR(8) PRIMARY KEY,
 );
 
---per un'eventuale compravendita (non la metterei)
-marketplace
+
+--ELIMINABILE
+--per un'eventuale vendita al posto dello scambio
+CREATE TABLE marketplace (
+);
+--ELIMINABILE
+--per classificare gli oggetti
+CREATE TABLE Categoria (
+);
