@@ -1,54 +1,130 @@
+--legata a Risultato, Piattaforma, Mazzo, Carta
 CREATE TABLE Utente (
-    Codice VARCHAR(20) PRIMARY KEY,
+    Nickname VARCHAR(10) PRIMARY KEY,
+    Email VARCHAR(20),
+    Data_Iscrizione DATE
 );
 
---Serve dividere un oggetto in oggetto fisico e virtuale
-CREATE TABLE CopiaPosseduta (
-    VARCHAR() PRIMARY KEY,
+--sottotipo di Utente
+--legato a Biglietto
+CREATE TABLE Solitario (
+    Utente VARCHAR() PRIMARY KEY,
+    Nome VARCHAR(),
+    Cognome VARCHAR()
 );
 
---rappresenta l'oggetto base
-CREATE TABLE OggettoCollezione (
-    Codice VARCHAR(8) PRIMARY KEY,
+--sottotipo di Utente
+--legato a Organizzazione_Esports
+CREATE TABLE Squadra (
+    Utente VARCHAR() PRIMARY KEY,
+    Tag_Squadra VARCHAR(),
+    Numero_Membri VARCHAR()
 );
 
---ogni oggetti appartiene ad una collezione
-CREATE TABLE Collezione (
-    Codice VARCHAR(8) PRIMARY KEY,
+--
+CREATE TABLE Carta (
+    Codice_Carta VARCHAR(10) PRIMARY KEY,
+    Nome VARCHAR(20),
+    Testo_Descrizione TEXT
 );
 
---sistema di scambio tra utenti
-CREATE TABLE Scambio (
-    Codice VARCHAR(8) PRIMARY KEY,
+--sottotipo di Carta
+--legato a Abilità
+CREATE TABLE Pokemon (
+    Carta VARCHAR(8) PRIMARY KEY,
+    Elemento VARCHAR,
+    Punti_Salute INT,
+    Fase_Evolutiva VARCHAR,
+    Debolezza VARCHAR,
+    Costo_Ritirata INT
 );
 
---oggetti che vengono scambiati (va messo un attributo: scambiabile?)
-CREATE TABLE ScambioItem (
-    Codice VARCHAR(8) PRIMARY KEY,
+--sottotipo di Carta
+--legato a Meccanica Torneo
+CREATE TABLE Aiuto (
+    Carta VARCHAR(8) PRIMARY KEY,
+    Effetto TEXT,
+    Sottotipo VARCHAR
 );
 
---oggetto desiderato dall'utente
-CREATE TABLE WishList (
-    Codice VARCHAR(8) PRIMARY KEY,
+--legata a Pokemon
+CREATE TABLE Abilità (
+    Nome_Abilità VARCHAR(8) PRIMARY KEY,
+    Descrizione_Effetto TEXT,
+    Condizione VARCHAR
 );
 
---oggetti desiderati sono diversi dalla copia posseduta perchè è qualcosa di virtuale
-CREATE TABLE WishListItem (
-    Codice VARCHAR(8) PRIMARY KEY,
+--legata a Aiuto
+CREATE TABLE Meccanica_Torneo (
+    Nome_Meccanica VARCHAR(8) PRIMARY KEY,
+    Limite_Nel_Mazzo INT,
+    --serve per dire dove va la carta dopo che ha usato quella meccanica
+    --Zona_Perduta VARCHAR()
 );
 
---emilinabile?
---reputazione e feedback
-CREATE TABLE Recensione (
-    Codice VARCHAR(8) PRIMARY KEY,
+--legato a Carta
+CREATE TABLE Espansione (
+    Codice_Espansione VARCHAR(6) PRIMARY KEY,
+    Nome_Espansione VARCHAR(),
 );
 
-
---ELIMINABILE
---per un'eventuale vendita al posto dello scambio
-CREATE TABLE marketplace (
+--legato a Utente
+CREATE TABLE Sede_Torneo (
+    Nome_Piattaforma VARCHAR() PRIMARY KEY,
+    .
 );
---ELIMINABILE
---per classificare gli oggetti
-CREATE TABLE Categoria (
+
+--sottotipo di piattaforma
+CREATE TABLE Fisica (
+    Piattaforma VARCHAR() PRIMARY KEY,
+    Indirizzo_Sede VARCHAR(),
+    Capienza_Massima INT
+);
+
+--sottotipo di piattaforma
+CREATE TABLE Digitale (
+    Piattaforma VARCHAR PRIMARY KEY,
+    Account_Torneo VARCHAR()
+);
+
+--legato a Carta
+CREATE TABLE Restrizione (
+    Nome_Lista VARCHAR(8) PRIMARY KEY,
+    Limitazione INT,
+    Bannato VARCHAR()
+);
+
+--legata a Carta, Utente
+CREATE TABLE Mazzo (
+    Codice_Mazzo VARCHAR(8) PRIMARY KEY,
+    Nome_Mazzo VARCHAR(),
+    Data_Validazione DATE
+);
+
+--legato a Utente e Risultato
+CREATE TABLE Risultato (
+    Codice_Risultato VARCHAR(),
+    Punteggio VARCHAR(3),
+    Bonus_Assegnati TEXT,
+    Penalità_Assegante TEXT
+);
+
+--legato a Risultato
+CREATE TABLE Partita (
+    Codice_Partita VARCHAR()
+    Ora_Inizio TIMESTAMP,
+    Fase_Torneo VARCHAR()
+);
+
+--legato a Singolo
+CREATE TABLE Biglietto (
+    Codice_Seriale VARCHAR(),
+    Prezzo DECIMAL
+);
+
+--legato a Squadra
+CREATE TABLE Organizzazione_Esports (
+    Partita_IVA VARCHAR(),
+    Sede_Legale VARCHAR(),
+    Budget_Sponsorizzazione DECIMAL
 );
