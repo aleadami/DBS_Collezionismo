@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Pagina-1" id="NGXbtKayGL6yTXOMVUgv">
-    <mxGraphModel dx="958" dy="664" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+    <mxGraphModel dx="2238" dy="1152" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -175,13 +175,13 @@
         <mxCell id="exqEipZZefy7SCpUY9I4-35" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Pagamento" vertex="1">
           <mxGeometry height="60" width="120" x="1080" y="1160" as="geometry" />
         </mxCell>
-        <mxCell id="exqEipZZefy7SCpUY9I4-36" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Piattaforma" vertex="1">
+        <mxCell id="exqEipZZefy7SCpUY9I4-36" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Sede Torneo" vertex="1">
           <mxGeometry height="60" width="120" x="1360" y="820" as="geometry" />
         </mxCell>
-        <mxCell id="exqEipZZefy7SCpUY9I4-37" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Digitale" vertex="1">
+        <mxCell id="exqEipZZefy7SCpUY9I4-37" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Fisica" vertex="1">
           <mxGeometry height="60" width="120" x="1640" y="760" as="geometry" />
         </mxCell>
-        <mxCell id="exqEipZZefy7SCpUY9I4-38" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Fisica" vertex="1">
+        <mxCell id="exqEipZZefy7SCpUY9I4-38" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Digitale" vertex="1">
           <mxGeometry height="60" width="120" x="1640" y="870" as="geometry" />
         </mxCell>
         <mxCell id="exqEipZZefy7SCpUY9I4-39" edge="1" parent="1" source="exqEipZZefy7SCpUY9I4-30" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;labelBackgroundColor=none;fontColor=default;" target="exqEipZZefy7SCpUY9I4-34" value="">
@@ -278,7 +278,7 @@
             <mxPoint x="560" y="679.3299999999999" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="exqEipZZefy7SCpUY9I4-57" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Restrizioni" vertex="1">
+        <mxCell id="exqEipZZefy7SCpUY9I4-57" parent="1" style="whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Restrizione" vertex="1">
           <mxGeometry height="60" width="120" x="320" y="580" as="geometry" />
         </mxCell>
         <mxCell id="exqEipZZefy7SCpUY9I4-58" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Selezione" vertex="1">
