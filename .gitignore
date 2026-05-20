@@ -11,3 +11,7 @@ target/
 #Ignora le configurazioni locali dell'IDE
 .idea/
 .vscode/
+
+# File temporanei di Microsoft Word
+~$*.doc
+~$*.docx
