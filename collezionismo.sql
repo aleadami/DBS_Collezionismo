@@ -3,6 +3,8 @@ CREATE TABLE Utente (
     Nickname VARCHAR(20) PRIMARY KEY,
     Email VARCHAR(20) NOT NULL,
     Data_Iscrizione DATE NOT NULL,
+    Ambiente VARCHAR(20),
+    Mazzo VARCHAR(8),
     FOREIGN KEY (Ambiente) REFERENCES Ambiente_Gioco(Nome_Ambiente),
     FOREIGN KEY (Mazzo) REFERENCES Mazzo(Codice_Mazzo)
 );
@@ -13,6 +15,7 @@ CREATE TABLE Solitario (
     Utente VARCHAR(20) PRIMARY KEY,
     Nome_Reale VARCHAR(20) NOT NULL,
     Cognome_Reale VARCHAR(10) NOT NULL,
+    Biglietto VARCHAR(15),
     FOREIGN KEY (Biglietto) REFERENCES Biglietto(Codice_Seriale)
 );
 
@@ -21,7 +24,8 @@ CREATE TABLE Solitario (
 CREATE TABLE Squadra (
     Utente VARCHAR(20) PRIMARY KEY,
     Tag_Squadra VARCHAR(3) NOT NULL,
-    Numero_Membri INT
+    Numero_Membri INT,
+    Esports VARCHAR(11),
     FOREIGN KEY (Esports) REFERENCES Organizzazione_Esports(Partita_IVA)
 );
 
@@ -35,8 +39,9 @@ CREATE TABLE Biglietto (
 CREATE TABLE Organizzazione_Esports (
     Partita_IVA VARCHAR(11) PRIMARY KEY,
     Sede_Legale VARCHAR(20) NOT NULL,
-    Budget_Sponsorizzazione DECIMAL NOT NULL
-    FOREIGN KEY (Squadra) REFERENCES Squadra(Nickname)
+    Budget_Sponsorizzazione DECIMAL NOT NULL,
+    Squadra VARCHAR(20),
+    FOREIGN KEY (Squadra) REFERENCES Squadra(Utente)
 );
 
 --legata a Espansione, Restrizione, Utente, Mazzo
@@ -80,7 +85,9 @@ CREATE TABLE Abilità (
     Nome_Abilità VARCHAR(8) PRIMARY KEY,
     Descrizione_Effetto TEXT NOT NULL,
     Danni INT,
-    Costo_Energia INT
+    Costo_Energia INT,
+    Pokemon VARCHAR(15),
+    FOREIGN KEY (Pokemon) REFERENCES Pokemon(Carta)
 );
 
 --legato a Carta
@@ -131,8 +138,10 @@ CREATE TABLE Risultato (
     Punteggio VARCHAR(3) NOT NULL,
     Bonus_Assegnati TEXT,
     Penalità_Assegnate TEXT,
-    PRIMARY KEY (Utente, Partita)
-    FOREIGN KEY (Utente) REFERENCES Utente(Nickname)
+    Utente VARCHAR(20),
+    Partita VARCHAR(8),
+    PRIMARY KEY (Utente, Partita),
+    FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
     FOREIGN KEY (Partita) REFERENCES Partita(Codice_Partita)
 );
 
@@ -140,6 +149,5 @@ CREATE TABLE Risultato (
 CREATE TABLE Partita (
     Codice_Partita VARCHAR(8) PRIMARY KEY,
     Ora_Inizio TIMESTAMP,
-    Fase_Torneo VARCHAR(10) NOT NULL,
-    FOREIGN KEY (Risultato) REFERENCES Risultato(Codice_Risultato)
+    Fase_Torneo VARCHAR(10) NOT NULL
 );
