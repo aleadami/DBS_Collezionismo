@@ -660,8 +660,8 @@
         <mxCell id="KUzCfxOeT0zBHEMrVTns-144" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Sottotipo" vertex="1">
           <mxGeometry height="30" width="60" x="1190" y="200" as="geometry" />
         </mxCell>
-        <mxCell id="KUzCfxOeT0zBHEMrVTns-145" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Nome" vertex="1">
-          <mxGeometry height="30" width="60" x="930" y="580" as="geometry" />
+        <mxCell id="KUzCfxOeT0zBHEMrVTns-145" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Nome_Carta" vertex="1">
+          <mxGeometry height="30" width="60" x="950" y="580" as="geometry" />
         </mxCell>
         <mxCell id="KUzCfxOeT0zBHEMrVTns-146" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Testo_Descrizione" vertex="1">
           <mxGeometry height="30" width="60" x="965" y="610" as="geometry" />
