@@ -82,7 +82,7 @@ CREATE TABLE Energia(
 
 --legata a Pokemon
 CREATE TABLE Abilità (
-    Nome_Abilità VARCHAR(8) PRIMARY KEY,
+    Nome_Abilità VARCHAR(20) PRIMARY KEY,
     Descrizione_Effetto TEXT NOT NULL,
     Danni INT,
     Costo_Energia INT,
@@ -150,4 +150,34 @@ CREATE TABLE Partita (
     Codice_Partita VARCHAR(8) PRIMARY KEY,
     Ora_Inizio TIMESTAMP,
     Fase_Torneo VARCHAR(10) NOT NULL
+);
+
+--relazione N:N Collezione tra Utente e Carta
+CREATE TABLE Collezione (
+    Utente VARCHAR(20),
+    Carta VARCHAR(10),
+    Lingua VARCHAR(15) NOT NULL,
+    Numero_Copie INT NOT NULL,
+    PRIMARY KEY (Utente, Carta),
+    FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
+    FOREIGN KEY (Carta) REFERENCES Carta(Codice_Carta)
+);
+
+--relazione N:N PartOf tra Carta e Mazzo
+CREATE TABLE PartOf (
+    Carta VARCHAR(10),
+    Mazzo VARCHAR(8),
+    Quantità INT NOT NULL,
+    PRIMARY KEY (Carta, Mazzo),
+    FOREIGN KEY (Carta) REFERENCES Carta(Codice_Carta),
+    FOREIGN KEY (Mazzo) REFERENCES Mazzo(Codice_Mazzo)
+);
+
+--relazione N:N Corrispondenza tra Pokemon e Abilità
+CREATE TABLE Corrispondenza (
+    Pokemon VARCHAR(15),
+    Abilità VARCHAR(20),
+    PRIMARY KEY (Pokemon, Abilità)
+    FOREIGN KEY (Pokemon) REFERENCES Pokemon(Carta),
+    FOREIGN KEY (Abilità) REFERENCES Abilità(Nome_Abilità)
 );
