@@ -240,10 +240,10 @@ LIMIT 3;
 SELECT S.Nome_Reale, S.Cognome_Reale, U.Email
 FROM Solitario S JOIN Utente U ON S.Utente = U.Nickname
 WHERE U.Nickname IN (
-    SELECT 
+    SELECT R.Utente
     FROM Risultato R
-    JOIN Utente U ON 
-    JOIN 
+    JOIN Utente U ON R.Utente = U.Nickname
+    JOIN Fisico F ON U.Ambiente = F.Ambiente
 );
 
 -- Query 6: Vogliamo creare una vista che mostri la 'Carta d'Identità' di ogni mazzo (Nome mazzo, autore, numero di carte e quando è stato creato) in modo da non dover rifare la JOIN ogni volta
