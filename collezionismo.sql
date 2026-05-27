@@ -196,22 +196,22 @@ CREATE TABLE Corrispondenza (
 -- Query 1: Elenca a che espansione appartengono le carte più giocate
 SELECT C.Nome_Carta, E.Nome_Espansione, COUNT(DISTINCT M.Codice_Mazzo) AS Conteggio 
 FROM Espansione E 
-JOIN Carta C ON E.Codice_Espansione = C.Espansione
+JOIN Carta C ON E.Codice_Espansione = C.Codice_Espansione
 JOIN PartOf P ON C.Codice_Carta = P.Carta
 JOIN Mazzo M ON P.Mazzo = M.Codice_Mazzo
 JOIN Utente U ON U.Mazzo = M.Codice_Mazzo
 GROUP BY C.Nome_Carta, E.Nome_Espansione
-HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 15
+HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 3
 ORDER BY Conteggio DESC;
 
 -- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 30 punti
 -- AVG(CAST(R.Punteggio) AS UNSIGNED) > 30 che veniva consigliato non serve perchè punteggio è 3 o 1 o 0
-SELECT U.Nickname, COUNT(R.Risultati) AS Partite_Digitali , AVG(R.Punteggio) > 30 AS Punteggio_Medio
+SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali , AVG(R.Punteggio) > 2.0 AS Punteggio_Medio
 FROM Utente U 
 JOIN Digitale D ON U.Ambiente = D.Ambiente
 JOIN Risultato R ON R.Utente = U.Nickname
 GROUP BY U.Nickname
-HAVING COUNT(R.Risultati), AVG(R.Punteggio) > 30;
+HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0;
 
 -- TROPPO SEMPLICE
 -- Query 3: Quali mazzi salvati nel database violano la regola del torneo, ovvero contengono un numero di carte totali diverso da 60
