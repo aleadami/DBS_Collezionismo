@@ -154,7 +154,7 @@ CREATE TABLE Energia(
 CREATE TABLE Risultato (
     Utente VARCHAR(20),
     Partita VARCHAR(8),
-    Punteggio VARCHAR(3) NOT NULL,
+    Punteggio INT NOT NULL, -- si potrebbe mettere small int
     Bonus_Assegnati TEXT,
     Penalità_Assegnate TEXT,
     PRIMARY KEY (Utente, Partita),
@@ -203,7 +203,6 @@ JOIN Utente U ON U.Mazzo = M.Codice_Mazzo
 GROUP BY C.Nome_Carta, E.Nome_Espansione
 HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 15
 ORDER BY Conteggio DESC;
- 
 
 -- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 30 punti
 -- AVG(CAST(R.Punteggio) AS UNSIGNED) > 30 che veniva consigliato non serve perchè punteggio è 3 o 1 o 0
@@ -247,9 +246,8 @@ WHERE U.Nickname IN (
 );
 
 -- Query 6: Vogliamo creare una vista che mostri la 'Carta d'Identità' di ogni mazzo (Nome mazzo, autore, numero di carte e quando è stato creato) in modo da non dover rifare la JOIN ogni volta
-SELECT 
-FROM 
-GROUP BY 
 
--- Indice query
-CREATE INDEX idx_ ON y;
+-- Indice query 1 e 3
+CREATE INDEX idx_partof_mazzo ON PartOf(Mazzo);
+-- Indice query 2 e 4
+CREATE INDEX idx_risultato ON Risultato(Utente, Punteggio);
