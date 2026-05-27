@@ -16,6 +16,7 @@ CREATE TABLE Solitario (
     Nome_Reale VARCHAR(20) NOT NULL,
     Cognome_Reale VARCHAR(10) NOT NULL,
     Biglietto VARCHAR(15),
+    FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
     FOREIGN KEY (Biglietto) REFERENCES Biglietto(Codice_Seriale)
 );
 
@@ -26,6 +27,7 @@ CREATE TABLE Squadra (
     Tag_Squadra VARCHAR(3) NOT NULL,
     Numero_Membri INT,
     Esports VARCHAR(11),
+    FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
     FOREIGN KEY (Esports) REFERENCES Organizzazione_Esports(Partita_IVA)
 );
 
@@ -63,7 +65,8 @@ CREATE TABLE Pokemon (
     Punti_Salute INT NOT NULL,
     Fase_Evolutiva INT NOT NULL,
     Debolezza VARCHAR(10) NOT NULL,
-    Costo_Ritirata INT NOT NULL
+    Costo_Ritirata INT NOT NULL,
+    FOREIGN KEY (Carta) REFERENCES Carta(Codice_Carta)
 );
 
 --sottotipo di Carta
@@ -71,14 +74,16 @@ CREATE TABLE Trainer (
     Carta VARCHAR(8) PRIMARY KEY,
     Massimo_Utilizzi INT,
     Sottotipo VARCHAR(15) NOT NULL,
-    Durata INT NOT NULL
+    Durata INT NOT NULL,
+    FOREIGN KEY (Carta) REFERENCES Carta(Codice_Carta)
 );
 
 --sottotipo di Carta
 CREATE TABLE Energia(
-    Carta VARCHAR(8) PRIMARY KEY
+    Carta VARCHAR(8) PRIMARY KEY,
     Bersaglio VARCHAR(20) NOT NULL,
-    Elemento VARCHAR(10) NOT NULL
+    Elemento VARCHAR(10) NOT NULL,
+    FOREIGN KEY (Carta) REFERENCES Carta(Codice_Carta)
 )
 
 --legata a Pokemon
@@ -117,6 +122,7 @@ CREATE TABLE Fisico (
     Ambiente VARCHAR(20) PRIMARY KEY,
     Indirizzo_Sede VARCHAR(30) NOT NULL,
     Capienza_Massima INT NOT NULL
+    FOREIGN KEY (Ambiente_Gioco) REFERENCES Ambiente_Gioco(Nome_Ambiente)
 );
 
 --sottotipo di AmbienteGioco
@@ -124,6 +130,7 @@ CREATE TABLE Digitale (
     Ambiente VARCHAR(20) PRIMARY KEY,
     Indirizzo_IP VARCHAR(15) NOT NULL,
     Regione_Server VARCHAR(20) NOT NULL
+    FOREIGN KEY (Ambiente_Gioco) REFERENCES Ambiente_Gioco(Nome_Ambiente)
 );
 
 --legata a Carta, Utente
@@ -184,7 +191,7 @@ CREATE TABLE PartOf (
 CREATE TABLE Corrispondenza (
     Pokemon VARCHAR(15),
     Abilità VARCHAR(20),
-    PRIMARY KEY (Pokemon, Abilità)
+    PRIMARY KEY (Pokemon, Abilità),
     FOREIGN KEY (Pokemon) REFERENCES Pokemon(Carta),
     FOREIGN KEY (Abilità) REFERENCES Abilità(Nome_Abilità)
 );
@@ -222,18 +229,26 @@ FROM Mazzo M JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo
 GROUP BY M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte
 HAVING M.Numero_Carte <> SUM(P.Quantità);
 
--- Query 4: Creiamo una vista permanente che calcoli la classifica live del torneo (somma dei punti di ogni giocatore). Dopodiché, interroghiamo la vista per estrarre solo la 'Top 3' dei giocatori del torneo
+-- Query 4: Creiamo una vista permanente che calcoli la classifica live del torneo (nickname, somma dei punti e partite disputate). Dopodiché, interroghiamo la vista per estrarre solo la i primi tre giocatori e il rispettivo punteggio
 CREATE VIEW Classifica AS (
-    SELECT
+    SELECT Utente, SUM(Punteggio) AS Punti_Totali, COUNT(Partita) AS Partite_Giocate
+    FROM Risultato
+    GROUP BY Utente
 );
-SELECT 
-FROM 
-GROUP BY 
+SELECT Utente, Punti_Totali
+FROM Classifica
+ORDER BY Punti_Totali DESC
+LIMIT 3;
 
 -- Query 5: Trova i dettagli di tutti i giocatori (Nome, Cognome, Email) che hanno utilizzato almeno una volta un ambiente di gioco 'Fisico' (ovvero che hanno giocato un match dal vivo, escludendo chi ha giocato solo online)
-SELECT 
-FROM 
-GROUP BY 
+SELECT S.Nome_Reale, S.Cognome_Reale, U.Email
+FROM Solitario S JOIN Utente U ON S.Utente = U.Nickname
+WHERE U.Nickname IN (
+    SELECT 
+    FROM Risultato R
+    JOIN Utente U ON 
+    JOIN 
+);
 
 -- Query 6: Vogliamo creare una vista che mostri la 'Carta d'Identità' di ogni mazzo (Nome mazzo, autore, numero di carte e quando è stato creato) in modo da non dover rifare la JOIN ogni volta
 SELECT 
