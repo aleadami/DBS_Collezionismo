@@ -1,3 +1,64 @@
+--legato a Utente
+CREATE TABLE Ambiente_Gioco (
+    Nome_Ambiente VARCHAR(20) PRIMARY KEY,
+    Organizzatore VARCHAR(20) NOT NULL
+);
+
+--legata a Carta, Utente
+CREATE TABLE Mazzo (
+    Codice_Mazzo VARCHAR(8) PRIMARY KEY,
+    Nome_Mazzo VARCHAR(15) NOT NULL,
+    Data_Validazione DATE,
+    -- Attributo per la ridondanza
+    --Leggere un attributo locale a Mazzo costa 1 solo accesso al disco. 
+    --Se non ci fosse stato, il database avrebbe dovuto fare una JOIN con PartOf e un SUM(Quantità) ogni singola volta, 
+    --effettuando decine di accessi in più per ogni mazzo
+    Numero_Carte INT NOT NULL
+);
+
+--legato a Singolo
+CREATE TABLE Biglietto (
+    Codice_Seriale VARCHAR(15) PRIMARY KEY,
+    Prezzo DECIMAL 
+);
+
+--legato a Squadra
+CREATE TABLE Organizzazione_Esports (
+    Partita_IVA VARCHAR(11) PRIMARY KEY,
+    Sede_Legale VARCHAR(20) NOT NULL,
+    Budget_Sponsorizzazione DECIMAL NOT NULL
+);
+
+--legato a Carta
+CREATE TABLE Espansione (
+    Codice_Espansione VARCHAR(6),
+    Nome_Espansione VARCHAR(20),
+    Data_Rilascio DATE NOT NULL,
+    PRIMARY KEY (Codice_Espansione, Nome_Espansione)
+);
+
+--legato a Carta
+CREATE TABLE Restrizione (
+    Nome_Lista VARCHAR(8) PRIMARY KEY,
+    Limitazione INT NOT NULL,
+    Bannato INT NOT NULL
+);
+
+--legato a Risultato
+CREATE TABLE Partita (
+    Codice_Partita VARCHAR(8) PRIMARY KEY,
+    Ora_Inizio TIMESTAMP,
+    Fase_Torneo VARCHAR(10) NOT NULL
+);
+
+--legata a Pokemon
+CREATE TABLE Abilità (
+    Nome_Abilità VARCHAR(20) PRIMARY KEY,
+    Descrizione_Effetto TEXT NOT NULL,
+    Danni INT,
+    Costo_Energia INT
+);
+
 --legata a Risultato, Piattaforma, Mazzo, Carta
 CREATE TABLE Utente (
     Nickname VARCHAR(20) PRIMARY KEY,
@@ -7,6 +68,19 @@ CREATE TABLE Utente (
     Mazzo VARCHAR(8),
     FOREIGN KEY (Ambiente) REFERENCES Ambiente_Gioco(Nome_Ambiente),
     FOREIGN KEY (Mazzo) REFERENCES Mazzo(Codice_Mazzo)
+);
+
+--legata a Espansione, Restrizione, Utente, Mazzo
+CREATE TABLE Carta (
+    Codice_Carta VARCHAR(15) PRIMARY KEY,
+    Nome_Carta VARCHAR(20) NOT NULL,
+    Testo_Descrizione TEXT NOT NULL,
+    Effetto TEXT,
+    Codice_Espansione VARCHAR(6),
+    Nome_Espansione VARCHAR(20),
+    Restrizione VARCHAR(8),
+    FOREIGN KEY (Codice_Espansione, Nome_Espansione) REFERENCES Espansione(Codice_Espansione, Nome_Espansione),
+    FOREIGN KEY (Restrizione) REFERENCES Restrizione(Nome_Lista)
 );
 
 --sottotipo di Utente
@@ -31,30 +105,20 @@ CREATE TABLE Squadra (
     FOREIGN KEY (Esports) REFERENCES Organizzazione_Esports(Partita_IVA)
 );
 
---legato a Singolo
-CREATE TABLE Biglietto (
-    Codice_Seriale VARCHAR(15) PRIMARY KEY,
-    Prezzo DECIMAL 
+--sottotipo di AmbienteGioco
+CREATE TABLE Fisico (
+    Ambiente VARCHAR(20) PRIMARY KEY,
+    Indirizzo_Sede VARCHAR(30) NOT NULL,
+    Capienza_Massima INT NOT NULL,
+    FOREIGN KEY (Ambiente) REFERENCES Ambiente_Gioco(Nome_Ambiente)
 );
 
---legato a Squadra
-CREATE TABLE Organizzazione_Esports (
-    Partita_IVA VARCHAR(11) PRIMARY KEY,
-    Sede_Legale VARCHAR(20) NOT NULL,
-    Budget_Sponsorizzazione DECIMAL NOT NULL,
-    Squadra VARCHAR(20)
-);
-
---legata a Espansione, Restrizione, Utente, Mazzo
-CREATE TABLE Carta (
-    Codice_Carta VARCHAR(10) PRIMARY KEY,
-    Nome_Carta VARCHAR(20) NOT NULL,
-    Testo_Descrizione TEXT NOT NULL,
-    Effetto TEXT,
-    Espansione VARCHAR(6),
-    Restrizione VARCHAR(8),
-    FOREIGN KEY (Espansione) REFERENCES Espansione(Codice_Espansione),
-    FOREIGN KEY (Restrizione) REFERENCES Restrizione(Nome_Lista)
+--sottotipo di AmbienteGioco
+CREATE TABLE Digitale (
+    Ambiente VARCHAR(20) PRIMARY KEY,
+    Indirizzo_IP VARCHAR(15) NOT NULL,
+    Regione_Server VARCHAR(20) NOT NULL,
+    FOREIGN KEY (Ambiente) REFERENCES Ambiente_Gioco(Nome_Ambiente)
 );
 
 --sottotipo di Carta
@@ -71,7 +135,7 @@ CREATE TABLE Pokemon (
 
 --sottotipo di Carta
 CREATE TABLE Trainer (
-    Carta VARCHAR(8) PRIMARY KEY,
+    Carta VARCHAR(15) PRIMARY KEY,
     Massimo_Utilizzi INT,
     Sottotipo VARCHAR(15) NOT NULL,
     Durata INT NOT NULL,
@@ -80,96 +144,28 @@ CREATE TABLE Trainer (
 
 --sottotipo di Carta
 CREATE TABLE Energia(
-    Carta VARCHAR(8) PRIMARY KEY,
+    Carta VARCHAR(15) PRIMARY KEY,
     Bersaglio VARCHAR(20) NOT NULL,
     Elemento VARCHAR(10) NOT NULL,
     FOREIGN KEY (Carta) REFERENCES Carta(Codice_Carta)
-)
-
---legata a Pokemon
-CREATE TABLE Abilità (
-    Nome_Abilità VARCHAR(20) PRIMARY KEY,
-    Descrizione_Effetto TEXT NOT NULL,
-    Danni INT,
-    Costo_Energia INT,
-    Pokemon VARCHAR(15),
-    FOREIGN KEY (Pokemon) REFERENCES Pokemon(Carta)
-);
-
---legato a Carta
-CREATE TABLE Espansione (
-    Codice_Espansione VARCHAR(6),
-    Nome_Espansione VARCHAR(20) NOT NULL,
-    Data_Rilascio DATE NOT NULL,
-    PRIMARY KEY (Codice_Espansione, Nome_Espansione)
-);
-
---legato a Carta
-CREATE TABLE Restrizione (
-    Nome_Lista VARCHAR(8) PRIMARY KEY,
-    Limitazione INT NOT NULL,
-    Bannato INT NOT NULL
-);
-
---legato a Utente
-CREATE TABLE Ambiente_Gioco (
-    Nome_Ambiente VARCHAR(20) PRIMARY KEY,
-    Organizzatore VARCHAR(20) NOT NULL
-);
-
---sottotipo di AmbienteGioco
-CREATE TABLE Fisico (
-    Ambiente VARCHAR(20) PRIMARY KEY,
-    Indirizzo_Sede VARCHAR(30) NOT NULL,
-    Capienza_Massima INT NOT NULL
-    FOREIGN KEY (Ambiente_Gioco) REFERENCES Ambiente_Gioco(Nome_Ambiente)
-);
-
---sottotipo di AmbienteGioco
-CREATE TABLE Digitale (
-    Ambiente VARCHAR(20) PRIMARY KEY,
-    Indirizzo_IP VARCHAR(15) NOT NULL,
-    Regione_Server VARCHAR(20) NOT NULL
-    FOREIGN KEY (Ambiente_Gioco) REFERENCES Ambiente_Gioco(Nome_Ambiente)
-);
-
---legata a Carta, Utente
-CREATE TABLE Mazzo (
-    Codice_Mazzo VARCHAR(8) PRIMARY KEY,
-    Nome_Mazzo VARCHAR(15) NOT NULL,
-    Data_Validazione DATE,
-    -- Attributo per la ridondanza
-    --Leggere un attributo locale a Mazzo costa 1 solo accesso al disco. 
-    --Se non ci fosse stato, il database avrebbe dovuto fare una JOIN con PartOf e un SUM(Quantità) ogni singola volta, 
-    --effettuando decine di accessi in più per ogni mazzo
-    Numero_Carte INT NOT NULL
 );
 
 --legato a Utente e Risultato
 CREATE TABLE Risultato (
-    Utente VARCHAR(20) NOT NULL,
-    Partita VARCHAR(8) NOT NULL,
+    Utente VARCHAR(20),
+    Partita VARCHAR(8),
     Punteggio VARCHAR(3) NOT NULL,
     Bonus_Assegnati TEXT,
     Penalità_Assegnate TEXT,
-    Utente VARCHAR(20),
-    Partita VARCHAR(8),
     PRIMARY KEY (Utente, Partita),
     FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
     FOREIGN KEY (Partita) REFERENCES Partita(Codice_Partita)
 );
 
---legato a Risultato
-CREATE TABLE Partita (
-    Codice_Partita VARCHAR(8) PRIMARY KEY,
-    Ora_Inizio TIMESTAMP,
-    Fase_Torneo VARCHAR(10) NOT NULL
-);
-
 --relazione N:N Collezione tra Utente e Carta
 CREATE TABLE Collezione (
     Utente VARCHAR(20),
-    Carta VARCHAR(10),
+    Carta VARCHAR(15),
     Lingua VARCHAR(15) NOT NULL,
     Numero_Copie INT NOT NULL,
     PRIMARY KEY (Utente, Carta),
@@ -179,7 +175,7 @@ CREATE TABLE Collezione (
 
 --relazione N:N PartOf tra Carta e Mazzo
 CREATE TABLE PartOf (
-    Carta VARCHAR(10),
+    Carta VARCHAR(15),
     Mazzo VARCHAR(8),
     Quantità INT NOT NULL, -- indica quante carte doppie ci sono in uno stesso mazzo, ad esempio due 'Ricerche accademiche' in uno stesso mazzo
     PRIMARY KEY (Carta, Mazzo),
