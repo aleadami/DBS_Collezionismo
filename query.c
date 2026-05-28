@@ -24,7 +24,7 @@ int main() {
     // ESECUZIONE QUERY 1
     // =================================================================================
 
-    // Preparazione della stringa SQL 
+    // Preparazione della stringa per la Query SQL 
     const char *query =
         "SELECT C.Nome_Carta, E.Nome_Espansione, COUNT(DISTINCT M.Codice_Mazzo) AS Conteggio "
         "FROM Espansione E "
@@ -74,7 +74,7 @@ int main() {
     // ESECUZIONE QUERY 2
     // =================================================================================
 
-    // Sovrascrivo la variabile della query
+    // Sovrascrivo la variabile della Query
     query = "SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali, AVG(R.Punteggio) AS Punteggio_Medio "
         "FROM Utente U "
         "JOIN Digitale D ON U.Ambiente = D.Ambiente "
@@ -118,7 +118,7 @@ int main() {
     // ESECUZIONE QUERY 3
     // =================================================================================
 
-    // Sovrascrivo la variabile della query
+    // Sovrascrivo la variabile della Query
     query = "SELECT M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte AS Valore_Ridondanza, SUM(P.Quantità) AS Valore_Quantità "
     "FROM Mazzo M "
     "JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo "
@@ -161,7 +161,7 @@ int main() {
     // ESECUZIONE QUERY 4
     // =================================================================================
 
-    // Sovrascrivo la variabile della query. Uso CREATE OR REPLACE VIEW per evitare crash se il programma viene avviato più volte
+    // Sovrascrivo la variabile della Query. Uso CREATE OR REPLACE VIEW per evitare crash se il programma viene avviato più volte
     query = "CREATE OR REPLACE VIEW Classifica AS ("
     "   SELECT Utente, SUM(Punteggio) AS Punti_Totali, COUNT(Partita) AS Partite_Giocate "
     "   FROM Risultato "
@@ -208,7 +208,7 @@ int main() {
     // ESECUZIONE QUERY 5
     // =================================================================================
 
-    // Sovrascrivo la variabile della query
+    // Sovrascrivo la variabile della Query
     query = "SELECT S.Nome_Reale, S.Cognome_Reale, U.Email "
     "FROM Solitario S JOIN Utente U ON S.Utente = U.Nickname "
     "WHERE U.Nickname IN ( "
