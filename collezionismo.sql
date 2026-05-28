@@ -193,58 +193,6 @@ CREATE TABLE Corrispondenza (
 );
 
 
--- Query 1: Elenca a che espansione appartengono le carte più giocate
-SELECT C.Nome_Carta, E.Nome_Espansione, COUNT(DISTINCT M.Codice_Mazzo) AS Conteggio 
-FROM Espansione E 
-JOIN Carta C ON E.Codice_Espansione = C.Codice_Espansione AND E.Nome_Espansione = C.Nome_Espansione
-JOIN PartOf P ON C.Codice_Carta = P.Carta
-JOIN Mazzo M ON P.Mazzo = M.Codice_Mazzo
-JOIN Utente U ON U.Mazzo = M.Codice_Mazzo
-GROUP BY C.Nome_Carta, E.Nome_Espansione
-HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 3
-ORDER BY Conteggio DESC;
-
--- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 30 punti
--- AVG(CAST(R.Punteggio) AS UNSIGNED) > 30 che veniva consigliato non serve perchè punteggio è 3 o 1 o 0
-SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali , AVG(R.Punteggio) AS Punteggio_Medio
-FROM Utente U 
-JOIN Digitale D ON U.Ambiente = D.Ambiente
-JOIN Risultato R ON R.Utente = U.Nickname
-GROUP BY U.Nickname
-HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0;
-
--- Query 3: Quali mazzi nel database presentano un'incoerenza tra il valore ridondante 'Numero_Carte' e il conteggio effettivo delle carte fisicamente presenti nella tabella 'PartOf'
-SELECT M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte AS Valore_Ridondanza, SUM(P.Quantità) AS Valore_Quantità
-FROM Mazzo M JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo
-GROUP BY M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte
-HAVING M.Numero_Carte <> SUM(P.Quantità);
-
--- Query 4: Creiamo una vista permanente che calcoli la classifica live del torneo (nickname, somma dei punti e partite disputate). Dopodiché, interroghiamo la vista per estrarre solo la i primi tre giocatori e il rispettivo punteggio
-CREATE VIEW Classifica AS (
-    SELECT Utente, SUM(Punteggio) AS Punti_Totali, COUNT(Partita) AS Partite_Giocate
-    FROM Risultato
-    GROUP BY Utente
-);
-SELECT Utente, Punti_Totali
-FROM Classifica
-ORDER BY Punti_Totali DESC
-LIMIT 3;
-
--- Query 5: Trova i dettagli di tutti i giocatori (Nome, Cognome, Email) che hanno utilizzato almeno una volta un ambiente di gioco 'Fisico' (ovvero che hanno giocato un match dal vivo, escludendo chi ha giocato solo online)
-SELECT S.Nome_Reale, S.Cognome_Reale, U.Email
-FROM Solitario S JOIN Utente U ON S.Utente = U.Nickname
-WHERE U.Nickname IN (
-    SELECT R.Utente
-    FROM Risultato R
-    JOIN Utente U ON R.Utente = U.Nickname
-    JOIN Fisico F ON U.Ambiente = F.Ambiente
-);
-
--- Indice query 1 e 3
-CREATE INDEX idx_partof_mazzo ON PartOf(Mazzo);
--- Indice query 2 e 4
-CREATE INDEX idx_risultato ON Risultato(Utente, Punteggio);
-
 -- Popolamento DB
 INSERT INTO Ambiente_Gioco (Nome_Ambiente, Organizzatore) VALUES
 ('Fumetteria KissaShop', 'Marco Rossi'),
@@ -467,3 +415,56 @@ INSERT INTO Risultato (Utente, Partita, Punteggio, Bonus_Assegnati, Penalità_As
 ('IceKing', 'PRT-0020', 3, NULL, NULL),
 ('IceKing', 'PRT-0021', 3, NULL, NULL),
 ('IceKing', 'PRT-0022', 3, NULL, NULL);
+
+
+-- Query 1: Elenca a che espansione appartengono le carte più giocate
+SELECT C.Nome_Carta, E.Nome_Espansione, COUNT(DISTINCT M.Codice_Mazzo) AS Conteggio 
+FROM Espansione E 
+JOIN Carta C ON E.Codice_Espansione = C.Codice_Espansione AND E.Nome_Espansione = C.Nome_Espansione
+JOIN PartOf P ON C.Codice_Carta = P.Carta
+JOIN Mazzo M ON P.Mazzo = M.Codice_Mazzo
+JOIN Utente U ON U.Mazzo = M.Codice_Mazzo
+GROUP BY C.Nome_Carta, E.Nome_Espansione
+HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 3
+ORDER BY Conteggio DESC;
+
+-- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 30 punti
+-- AVG(CAST(R.Punteggio) AS UNSIGNED) > 30 che veniva consigliato non serve perchè punteggio è 3 o 1 o 0
+SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali , AVG(R.Punteggio) AS Punteggio_Medio
+FROM Utente U 
+JOIN Digitale D ON U.Ambiente = D.Ambiente
+JOIN Risultato R ON R.Utente = U.Nickname
+GROUP BY U.Nickname
+HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0;
+
+-- Query 3: Quali mazzi nel database presentano un'incoerenza tra il valore ridondante 'Numero_Carte' e il conteggio effettivo delle carte fisicamente presenti nella tabella 'PartOf'
+SELECT M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte AS Valore_Ridondanza, SUM(P.Quantità) AS Valore_Quantità
+FROM Mazzo M JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo
+GROUP BY M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte
+HAVING M.Numero_Carte <> SUM(P.Quantità);
+
+-- Query 4: Creiamo una vista permanente che calcoli la classifica live del torneo (nickname, somma dei punti e partite disputate). Dopodiché, interroghiamo la vista per estrarre solo la i primi tre giocatori e il rispettivo punteggio
+CREATE VIEW Classifica AS (
+    SELECT Utente, SUM(Punteggio) AS Punti_Totali, COUNT(Partita) AS Partite_Giocate
+    FROM Risultato
+    GROUP BY Utente
+);
+SELECT Utente, Punti_Totali
+FROM Classifica
+ORDER BY Punti_Totali DESC
+LIMIT 3;
+
+-- Query 5: Trova i dettagli di tutti i giocatori (Nome, Cognome, Email) che hanno utilizzato almeno una volta un ambiente di gioco 'Fisico' (ovvero che hanno giocato un match dal vivo, escludendo chi ha giocato solo online)
+SELECT S.Nome_Reale, S.Cognome_Reale, U.Email
+FROM Solitario S JOIN Utente U ON S.Utente = U.Nickname
+WHERE U.Nickname IN (
+    SELECT R.Utente
+    FROM Risultato R
+    JOIN Utente U ON R.Utente = U.Nickname
+    JOIN Fisico F ON U.Ambiente = F.Ambiente
+);
+
+-- Indice query 1 e 3
+CREATE INDEX idx_partof_mazzo ON PartOf(Mazzo);
+-- Indice query 2 e 4
+CREATE INDEX idx_risultato ON Risultato(Utente, Punteggio);
