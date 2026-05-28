@@ -213,12 +213,7 @@ JOIN Risultato R ON R.Utente = U.Nickname
 GROUP BY U.Nickname
 HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0;
 
--- TROPPO SEMPLICE
--- Query 3: Quali mazzi salvati nel database violano la regola del torneo, ovvero contengono un numero di carte totali diverso da 60
-SELECT M.Codice_Mazzo, U.Nickname, M.Numero_Carte
-FROM Mazzo M JOIN Utente U ON U.Mazzo = M.Codice_Mazzo
-WHERE M.Numero_Carte <> 60;
--- Query 3 MODIFICATA: Quali mazzi nel database presentano un'incoerenza tra il valore ridondante 'Numero_Carte' e il conteggio effettivo delle carte fisicamente presenti nella tabella 'PartOf'
+-- Query 3: Quali mazzi nel database presentano un'incoerenza tra il valore ridondante 'Numero_Carte' e il conteggio effettivo delle carte fisicamente presenti nella tabella 'PartOf'
 SELECT M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte AS Valore_Ridondanza, SUM(P.Quantità) AS Valore_Quantità
 FROM Mazzo M JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo
 GROUP BY M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte
