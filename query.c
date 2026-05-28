@@ -51,18 +51,20 @@ int main() {
     printf("\nRisultati della Query 1:\n");
     printf("------------------------------------------------------------------\n");
 
-    for(int i=0; i<numAttributi;i++) {
+    for(int i = 0; i < numAttributi; i++) {
         printf("%-25s", PQfname(res, i));
     }
+
     printf("\n------------------------------------------------------------------\n");
 
     // Ciclo doppio per stampare i dati riga per riga, colonna per colonna
-    for(int i=0; i<numTuples; i++) {
-        for(int j=0; j<numAttributi; j++) {
+    for(int i = 0; i < numTuples; i++) {
+        for(int j = 0; j < numAttributi; j++) {
             printf("%-25s", PQgetvalue(res, i, j));
         }
         printf("\n"); // A capo alla fine di ogni riga
     }
+
     printf("------------------------------------------------------------------\n");
 
     //Pulizia memoria e chiusura connessione
@@ -95,23 +97,160 @@ int main() {
     printf("\nRisultati della Query 2:\n");
     printf("------------------------------------------------------------------\n");
     
-    for(int i=0; i<numAttributi; i++) {
+    for(int i = 0; i < numAttributi; i++) {
         printf("%-25s", PQfname(res, i));
     }
+
     printf("\n------------------------------------------------------------------\n");
 
-    for(int i=0; i<numTuples; i++) {
-        for(int j=0;j<numAttributi;j++) {
+    for(int i = 0; i < numTuples; i++) {
+        for(int j = 0; j < numAttributi; j++) {
             printf("%-25s", PQgetvalue(res, i, j));
         }
         printf("\n");
     }
+
     printf("------------------------------------------------------------------\n");
 
     PQclear(res);
 
+    // =================================================================================
+    // ESECUZIONE QUERY 3
+    // =================================================================================
+
+    // Sovrascrivo la variabile della query
+    query = "SELECT M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte AS Valore_Ridondanza, SUM(P.Quantità) AS Valore_Quantità "
+    "FROM Mazzo M "
+    "JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo "
+    "GROUP BY M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte "
+    "HAVING M.Numero_Carte <> SUM(P.Quantità);";
+
+    //Esecuzione della Query    
+    res = PQexec(conn, query);
+
+    if(PQresultStatus(res) != PGRES_TUPLES_OK) {
+        fprintf(stderr, "Non è stato restituito un risultato per la Query 3 per via del seguente errore: %s", PQerrorMessage(conn));
+        PQclear(res);
+        do_exit(conn);
+    }
+
+    numTuples = PQntuples(res);
+    numAttributi = PQnfields(res);
+
+    printf("\nRisultati della Query 3:\n");
+    printf("------------------------------------------------------------------\n");
+
+    for(int i = 0; i < numAttributi; i++) {
+        printf("%-25s", PQfname(res, i));
+    }
+
+    printf("\n------------------------------------------------------------------\n");
+
+    for(int i = 0; i < numTuples; i++) {
+        for(int j = 0; j < numAttributi; j++) {
+            printf("%-25s", PQgetvalue(res, i, j));
+        }
+        printf("\n");
+    }
+
+    printf("------------------------------------------------------------------\n");
+
+    PQclear(res);
+
+    // =================================================================================
+    // ESECUZIONE QUERY 4
+    // =================================================================================
+
+    // Sovrascrivo la variabile della query. Uso CREATE OR REPLACE VIEW per evitare crash se il programma viene avviato più volte
+    query = "CREATE OR REPLACE VIEW Classifica AS ("
+    "   SELECT Utente, SUM(Punteggio) AS Punti_Totali, COUNT(Partita) AS Partite_Giocate "
+    "   FROM Risultato "
+    "   GROUP BY Utente"
+    "); "
+    "SELECT Utente, Punti_Totali "
+    "FROM Classifica "
+    "ORDER BY Punti_Totali DESC "
+    "LIMIT 3;";
+
+    //Esecuzione della Query    
+    res = PQexec(conn, query);
+
+    if(PQresultStatus(res) != PGRES_TUPLES_OK) {
+        fprintf(stderr, "Non è stato restituito un risultato per la Query 4 per via del seguente errore: %s", PQerrorMessage(conn));
+        PQclear(res);
+        do_exit(conn);
+    }
+
+    numTuples = PQntuples(res);
+    numAttributi = PQnfields(res);
+
+    printf("\nRisultati della Query 4:\n");
+    printf("------------------------------------------------------------------\n");
+
+    for(int i = 0; i < numAttributi; i++) {
+        printf("%-25s", PQfname(res, i));
+    }
+
+    printf("\n------------------------------------------------------------------\n");
+
+    for(int i = 0; i < numTuples; i++) {
+        for(int j = 0; j < numAttributi; j++) {
+            printf("%-25s", PQgetvalue(res, i, j));
+        }
+        printf("\n");
+    }
+
+    printf("------------------------------------------------------------------\n");
+
+    PQclear(res);
+    
+    // =================================================================================
+    // ESECUZIONE QUERY 5
+    // =================================================================================
+
+    // Sovrascrivo la variabile della query
+    query = "SELECT S.Nome_Reale, S.Cognome_Reale, U.Email "
+    "FROM Solitario S JOIN Utente U ON S.Utente = U.Nickname "
+    "WHERE U.Nickname IN ( "
+    "   SELECT R.Utente "
+    "   FROM Risultato R "
+    "   JOIN Utente U ON R.Utente = U.Nickname "
+    "   JOIN Fisico F ON U.Ambiente = F.Ambiente "
+    ");";
+
+    res = PQexec(conn, query);
+
+    if(PQresultStatus(res) != PGRES_TUPLES_OK) {
+        fprintf(stderr, "Non è stato restituito un risultato per la Query 5 per via del seguente errore: %s", PQerrorMessage(conn));
+        PQclear(res);
+        do_exit(conn);
+    }
+
+    numTuples = PQntuples(res);
+    numAttributi = PQnfields(res);
+
+    printf("\nRisultati della Query 5:\n");
+    printf("------------------------------------------------------------------\n");
+
+    for(int i = 0; i < numAttributi; i++) {
+        printf("%-25s", PQfname(res, i));
+    }
+
+    printf("\n------------------------------------------------------------------\n");
+
+    for(int i = 0; i < numTuples; i++) {
+        for(int j = 0; j < numAttributi; j++) {
+            printf("%-25s", PQgetvalue(res, i, j));
+        }
+        printf("\n");
+    }
+
+    printf("------------------------------------------------------------------\n");
+
+    PQclear(res);
 
     PQfinish(conn);
 
     return 0;
+
 }
