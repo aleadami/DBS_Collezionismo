@@ -48,7 +48,7 @@ CREATE TABLE Restrizione (
 CREATE TABLE Partita (
     Codice_Partita VARCHAR(8) PRIMARY KEY,
     Ora_Inizio TIMESTAMP,
-    Fase_Torneo VARCHAR(10) NOT NULL
+    Fase_Torneo VARCHAR(20) NOT NULL
 );
 
 --legata a Pokemon
@@ -204,7 +204,7 @@ INSERT INTO Ambiente_Gioco (Nome_Ambiente, Organizzatore) VALUES
 ('PTCGL Server 2', 'The Pokemon Co');
 
 INSERT INTO Fisico (Ambiente, Indirizzo_Sede, Capienza_Massima) VALUES
-('Fumetteria Alpha', 'Via Roma 12, Milano', 32),
+('Fumetteria KissaShop', 'Via Roma 12, Milano', 32),
 ('Palasport Roma', 'Viale dell''Europa, Roma', 500),
 ('Padiglione Fiera', 'Via della Fiera 1, Lucca', 150),
 ('Lega TCG Milano', 'Via Torino 10, Milano', 60);
@@ -435,9 +435,11 @@ FROM Utente U
 JOIN Digitale D ON U.Ambiente = D.Ambiente
 JOIN Risultato R ON R.Utente = U.Nickname
 GROUP BY U.Nickname
-HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0;
+HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0
+ORDER BY Punteggio_Medio DESC;
 
 -- Query 3: Quali mazzi nel database presentano un'incoerenza tra il valore ridondante 'Numero_Carte' e il conteggio effettivo delle carte fisicamente presenti nella tabella 'PartOf'
+-- Nel senso che i mazzi devono avere 60 carte e sono mazzi predefiniti, quindi se un utente ha fisicamente 10 delle 60 carte necessarie sarà in errore e la query lo mostrerà
 SELECT M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte AS Valore_Ridondanza, SUM(P.Quantità) AS Valore_Quantità
 FROM Mazzo M JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo
 GROUP BY M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte
