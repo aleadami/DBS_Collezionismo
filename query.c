@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "path/to/libpq-fe.h"
+#include <libpq-fe.h>
 
 void do_exit(PGconn *conn) {
 
@@ -80,7 +80,8 @@ int main() {
         "JOIN Digitale D ON U.Ambiente = D.Ambiente "
         "JOIN Risultato R ON R.Utente = U.Nickname "
         "GROUP BY U.Nickname "
-        "HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0;";
+        "HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0 "
+        "ORDER BY Punteggio_Medio DESC;";
 
     //Esecuzione della Query    
     res = PQexec(conn, query);
