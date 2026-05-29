@@ -19,7 +19,7 @@ CREATE TABLE Mazzo (
 --legato a Singolo
 CREATE TABLE Biglietto (
     Codice_Seriale VARCHAR(15) PRIMARY KEY,
-    Prezzo DECIMAL(5,2) 
+    Prezzo DECIMAL(5,2) NOT NULL 
 );
 
 --legato a Squadra
@@ -64,7 +64,7 @@ CREATE TABLE Utente (
     Nickname VARCHAR(20) PRIMARY KEY,
     Email VARCHAR(20) NOT NULL,
     Data_Iscrizione DATE NOT NULL,
-    Ambiente VARCHAR(20),
+    Ambiente VARCHAR(20) NOT NULL,
     Mazzo VARCHAR(8),
     FOREIGN KEY (Ambiente) REFERENCES Ambiente_Gioco(Nome_Ambiente),
     FOREIGN KEY (Mazzo) REFERENCES Mazzo(Codice_Mazzo)
@@ -76,8 +76,8 @@ CREATE TABLE Carta (
     Nome_Carta VARCHAR(20) NOT NULL,
     Testo_Descrizione TEXT NOT NULL,
     Effetto TEXT,
-    Codice_Espansione VARCHAR(6),
-    Nome_Espansione VARCHAR(20),
+    Codice_Espansione VARCHAR(6) NOT NULL,
+    Nome_Espansione VARCHAR(20) NOT NULL,
     Restrizione VARCHAR(8),
     FOREIGN KEY (Codice_Espansione, Nome_Espansione) REFERENCES Espansione(Codice_Espansione, Nome_Espansione),
     FOREIGN KEY (Restrizione) REFERENCES Restrizione(Nome_Lista)
@@ -89,7 +89,7 @@ CREATE TABLE Solitario (
     Utente VARCHAR(20) PRIMARY KEY,
     Nome_Reale VARCHAR(20) NOT NULL,
     Cognome_Reale VARCHAR(10) NOT NULL,
-    Biglietto VARCHAR(15),
+    Biglietto VARCHAR(15) NOT NULL,
     FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
     FOREIGN KEY (Biglietto) REFERENCES Biglietto(Codice_Seriale)
 );
@@ -99,7 +99,7 @@ CREATE TABLE Solitario (
 CREATE TABLE Squadra (
     Utente VARCHAR(20) PRIMARY KEY,
     Tag_Squadra VARCHAR(3) NOT NULL,
-    Numero_Membri INT,
+    Numero_Membri INT NOT NULL,
     Esports VARCHAR(11),
     FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
     FOREIGN KEY (Esports) REFERENCES Organizzazione_Esports(Partita_IVA)
