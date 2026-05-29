@@ -71,23 +71,42 @@ int main() {
     PQclear(res);
 
     // =================================================================================
-    // ESECUZIONE QUERY 2
+    // ESECUZIONE QUERY 2 (PARAMETRICA)
     // =================================================================================
 
-    // Sovrascrivo la variabile della Query
-    query = "SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali, AVG(R.Punteggio) AS Punteggio_Medio "
-        "FROM Utente U "
-        "JOIN Digitale D ON U.Ambiente = D.Ambiente "
-        "JOIN Risultato R ON R.Utente = U.Nickname "
-        "GROUP BY U.Nickname "
-        "HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0 "
-        "ORDER BY Punteggio_Medio DESC;";
+    printf("\n==================================================================\n");
+    printf(" IMPOSTAZIONE PARAMETRI - QUERY 2 \n");
+    printf("==================================================================\n");
+    
+    // Variabili per raccogliere l'input
+    char minPartite[10];
+    char minPunteggio[10];
 
-    //Esecuzione della Query    
-    res = PQexec(conn, query);
+    printf("Inserisci il numero minimo di partite digitali (es. 5): ");
+    scanf("%9s", minPartite);
+    
+    printf("Inserisci il punteggio medio minimo (es. 2.0): ");
+    scanf("%9s", minPunteggio);
+
+    // Array di puntatori che conterrà i parametri
+    const char *paramValues[2];
+    paramValues[0] = minPartite;
+    paramValues[1] = minPunteggio;
+
+    // Query parametrica utilizzando $1 e $2
+    query = "SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali, AVG(R.Punteggio) AS Punteggio_Medio "
+            "FROM Utente U "
+            "JOIN Digitale D ON U.Ambiente = D.Ambiente "
+            "JOIN Risultato R ON R.Utente = U.Nickname "
+            "GROUP BY U.Nickname "
+            "HAVING COUNT(R.Partita) > $1 AND AVG(R.Punteggio) > $2 "
+            "ORDER BY Punteggio_Medio DESC;";
+
+    // Esecuzione della Query con i parametri
+    res = PQexecParams(conn, query, 2, NULL, paramValues, NULL, NULL, 0);
 
     if(PQresultStatus(res) != PGRES_TUPLES_OK) {
-        fprintf(stderr, "Non è stato restituito un risultato per la Query 2 per via del seguente errore: %s", PQerrorMessage(conn));
+        fprintf(stderr, "Non è stato restituito un risultato per la Query 2 per via del seguente errore: %s\n", PQerrorMessage(conn));
         PQclear(res);
         do_exit(conn);
     }
@@ -95,7 +114,8 @@ int main() {
     numTuples = PQntuples(res);
     numAttributi = PQnfields(res);
 
-    printf("\nRisultati della Query 2:\n");
+    // Stampa dei parametri
+    printf("\nRisultati della Query 2 (Partite > %s, Media > %s):\n", minPartite, minPunteggio);
     printf("------------------------------------------------------------------\n");
     
     for(int i = 0; i < numAttributi; i++) {
