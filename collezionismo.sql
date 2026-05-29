@@ -19,7 +19,7 @@ CREATE TABLE Mazzo (
 --legato a Singolo
 CREATE TABLE Biglietto (
     Codice_Seriale VARCHAR(15) PRIMARY KEY,
-    Prezzo DECIMAL(5,2) 
+    Prezzo DECIMAL(5,2) NOT NULL 
 );
 
 --legato a Squadra
@@ -99,7 +99,7 @@ CREATE TABLE Solitario (
 CREATE TABLE Squadra (
     Utente VARCHAR(20) PRIMARY KEY,
     Tag_Squadra VARCHAR(3) NOT NULL,
-    Numero_Membri INT,
+    Numero_Membri INT NOT NULL,
     Esports VARCHAR(11),
     FOREIGN KEY (Utente) REFERENCES Utente(Nickname),
     FOREIGN KEY (Esports) REFERENCES Organizzazione_Esports(Partita_IVA)
@@ -428,8 +428,8 @@ GROUP BY C.Nome_Carta, E.Nome_Espansione
 HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 3
 ORDER BY Conteggio DESC;
 
--- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 30 punti
--- AVG(CAST(R.Punteggio) AS UNSIGNED) > 30 che veniva consigliato non serve perchè punteggio è 3 o 1 o 0
+-- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 2 punti 
+-- si ottengono 0 Punti per sconfitta, 1 punto per pareggio e 3 per vittoria; 2 punti implicano un numero predominante di vittorie
 SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali , AVG(R.Punteggio) AS Punteggio_Medio
 FROM Utente U 
 JOIN Digitale D ON U.Ambiente = D.Ambiente
