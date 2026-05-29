@@ -428,8 +428,8 @@ GROUP BY C.Nome_Carta, E.Nome_Espansione
 HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 3
 ORDER BY Conteggio DESC;
 
--- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 30 punti
--- AVG(CAST(R.Punteggio) AS UNSIGNED) > 30 che veniva consigliato non serve perchè punteggio è 3 o 1 o 0
+-- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 2 punti 
+-- si ottengono 0 Punti per sconfitta, 1 punto per pareggio e 3 per vittoria; 2 punti implicano un numero predominante di vittorie
 SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali , AVG(R.Punteggio) AS Punteggio_Medio
 FROM Utente U 
 JOIN Digitale D ON U.Ambiente = D.Ambiente
