@@ -9,17 +9,13 @@ CREATE TABLE Mazzo (
     Codice_Mazzo VARCHAR(8) PRIMARY KEY,
     Nome_Mazzo VARCHAR(15) NOT NULL,
     Data_Validazione DATE,
-    -- Attributo per la ridondanza
-    --Leggere un attributo locale a Mazzo costa 1 solo accesso al disco. 
-    --Se non ci fosse stato, il database avrebbe dovuto fare una JOIN con PartOf e un SUM(Quantità) ogni singola volta, 
-    --effettuando decine di accessi in più per ogni mazzo
     Numero_Carte INT NOT NULL
 );
 
 --legato a Singolo
 CREATE TABLE Biglietto (
     Codice_Seriale VARCHAR(15) PRIMARY KEY,
-    Prezzo DECIMAL(5,2) NOT NULL 
+    Prezzo DECIMAL(5,2) NOT NULL
 );
 
 --legato a Squadra
@@ -154,7 +150,7 @@ CREATE TABLE Energia(
 CREATE TABLE Risultato (
     Utente VARCHAR(20),
     Partita VARCHAR(8),
-    Punteggio INT NOT NULL, -- si potrebbe mettere small int
+    Punteggio INT NOT NULL,
     Bonus_Assegnati TEXT,
     Penalità_Assegnate TEXT,
     PRIMARY KEY (Utente, Partita),
@@ -177,7 +173,7 @@ CREATE TABLE Collezione (
 CREATE TABLE PartOf (
     Carta VARCHAR(15),
     Mazzo VARCHAR(8),
-    Quantità INT NOT NULL, -- indica quante carte doppie ci sono in uno stesso mazzo, ad esempio due 'Ricerche accademiche' in uno stesso mazzo
+    Quantità INT NOT NULL,
     PRIMARY KEY (Carta, Mazzo),
     FOREIGN KEY (Carta) REFERENCES Carta(Codice_Carta),
     FOREIGN KEY (Mazzo) REFERENCES Mazzo(Codice_Mazzo)
@@ -428,8 +424,7 @@ GROUP BY C.Nome_Carta, E.Nome_Espansione
 HAVING COUNT(DISTINCT M.Codice_Mazzo) >= 3
 ORDER BY Conteggio DESC;
 
--- Query 2: Quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 2 punti 
--- si ottengono 0 Punti per sconfitta, 1 punto per pareggio e 3 per vittoria; 2 punti implicano un numero predominante di vittorie
+-- Query 2: Elenca quali giocatori hanno disputato più di 5 partite totali in ambienti digitali ottenendo una media di punteggio superiore a 2 punti
 SELECT U.Nickname, COUNT(R.Partita) AS Partite_Digitali , AVG(R.Punteggio) AS Punteggio_Medio
 FROM Utente U 
 JOIN Digitale D ON U.Ambiente = D.Ambiente
@@ -438,8 +433,7 @@ GROUP BY U.Nickname
 HAVING COUNT(R.Partita) > 5 AND AVG(R.Punteggio) > 2.0
 ORDER BY Punteggio_Medio DESC;
 
--- Query 3: Quali mazzi nel database presentano un'incoerenza tra il valore ridondante 'Numero_Carte' e il conteggio effettivo delle carte fisicamente presenti nella tabella 'PartOf'
--- Nel senso che i mazzi devono avere 60 carte e sono mazzi predefiniti, quindi se un utente ha fisicamente 10 delle 60 carte necessarie sarà in errore e la query lo mostrerà
+-- Query 3: Elenca quali mazzi nel database presentano un'incoerenza tra il valore ridondante 'Numero_Carte' e il conteggio effettivo delle carte fisicamente presenti nella tabella 'PartOf'
 SELECT M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte AS Valore_Ridondanza, SUM(P.Quantità) AS Valore_Quantità
 FROM Mazzo M JOIN PartOf P ON M.Codice_Mazzo = P.Mazzo
 GROUP BY M.Codice_Mazzo, M.Nome_Mazzo, M.Numero_Carte
