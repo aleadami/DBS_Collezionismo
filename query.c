@@ -12,7 +12,7 @@ void do_exit(PGconn *conn) {
 int main() {
 
     // Connessione al database
-    PGconn *conn = PQconnectdb("dbname=testdb");
+    PGconn *conn = PQconnectdb("dbname=postgres");
 
     // Controllo che la connessione sia andata a buon fine
     if(PQstatus(conn) == CONNECTION_BAD) {
